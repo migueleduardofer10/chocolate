@@ -5,17 +5,15 @@ import com.youtube.ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
-@RestController
+@Controller
 public class UserController {
 
     @Autowired
@@ -27,6 +25,7 @@ public class UserController {
     }
 
     @PostMapping({"/registerNewUser"})
+    @ResponseBody
     public User registerNewUser(@RequestBody  User user, HttpServletRequest request)
             throws UnsupportedEncodingException, MessagingException {
         return userService.registerNewUser(user, getSiteURL(request));
@@ -59,9 +58,9 @@ public String processRegister(User user, HttpServletRequest request)
     @GetMapping("/verify")
     public String verifyUser(@Param("code") String code) {
         if (userService.verify(code)) {
-            return "../resources/templates/register_success.html";
+            return "verify_success";
         } else {
-            return "../resources/templates/verify_fail.html";
+            return "verify_fail";
         }
     }
 }
